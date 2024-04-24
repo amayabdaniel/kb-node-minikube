@@ -7,7 +7,8 @@ USER myuser
 
 # Set working directory
 WORKDIR /usr/src/app
-
+# Set the Node.js environment to production to avoid installing devDependencies
+ENV NODE_ENV=production
 # Install app dependencies by copying package files first
 COPY --chown=myuser:myuser package.json yarn.lock ./
 RUN yarn install --production
