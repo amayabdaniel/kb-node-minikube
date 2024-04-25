@@ -36,5 +36,3 @@ jobs:
           kubectl set image deployment/node-app nodeapp=us-central1-docker.pkg.dev/novaferi/kb-node-v0/nodeapp:${{ github.sha }} --record
           kubectl rollout status deployment/node-app
 
-      - name: Create K8s secret
-        run: kubectl create secret generic db-secret --from-literal=username=dbuser --from-literal=password=${{ secrets.DB_PASSWORD }}
