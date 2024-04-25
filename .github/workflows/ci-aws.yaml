@@ -50,6 +50,6 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl set image deployment/node-app nodeapp=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --record
+          kubectl set image deployment/node-app nodeapp=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           kubectl rollout status deployment/node-app
 
