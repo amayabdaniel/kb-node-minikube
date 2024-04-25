@@ -4,11 +4,11 @@ options:
 steps:
   # Step 1: Build the Docker image and tag it appropriately
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/novaferi/${_ARTIFACT_REGISTRY_NAME}/nodeapp:${COMMIT_SHA}', '.']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/novaferi/kb-node-v0/nodeapp:${COMMIT_SHA}', '.']
 
   # Step 2: Push the Docker image to Google Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/novaferi/${_ARTIFACT_REGISTRY_NAME}/nodeapp:${COMMIT_SHA}']
+    args: ['push', 'us-central1-docker.pkg.dev/novaferi/kb-node-v0/nodeapp:${COMMIT_SHA}']
 
   # Step 3: Get credentials for Kubernetes cluster
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -30,9 +30,4 @@ steps:
     - 'set'
     - 'image'
     - 'deployment/node-app'
-    - 'nodeapp=us-central1-docker.pkg.dev/novaferi/${_ARTIFACT_REGISTRY_NAME}/nodeapp:${COMMIT_SHA}'
-
-timeout: '1200s'
-
-substitutions:
-  _ARTIFACT_REGISTRY_NAME: 'kb-node-v0'
+    - 'nodeapp=us-central1-docker.pkg.dev/novaferi/kb-node-v0/nodeapp:${COMMIT_SHA}'
