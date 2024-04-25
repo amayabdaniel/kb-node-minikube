@@ -1,22 +1,38 @@
-steps:
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: gcloud
-  args:
-  - 'container'
-  - 'clusters'
-  - 'get-credentials'
-  - 'kb-node-minikube-cluster'
-  - '--zone'
-  - 'us-central1-a'
-  - '--project'
-  - 'novaferi'
+options:
+  logging: NONE
 
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: kubectl
-  args:
-  - 'set'
-  - 'image'
-  - 'deployment/node-app'
-  - 'nodeapp=us-central1-docker.pkg.dev/novaferi/${{ secrets.GCP_ARTIFACT_REGISTRY_NAME }}/nodeapp:${COMMIT_SHA}'
+steps:
+  # Step 1: Build the Docker image and tag it appropriately
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/novaferi/${_ARTIFACT_REGISTRY_NAME}/nodeapp:${COMMIT_SHA}', '.']
+
+  # Step 2: Push the Docker image to Google Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/novaferi/${_ARTIFACT_REGISTRY_NAME}/nodeapp:${COMMIT_SHA}']
+
+  # Step 3: Get credentials for Kubernetes cluster
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+    - 'container'
+    - 'clusters'
+    - 'get-credentials'
+    - 'kb-node-minikube-cluster'
+    - '--zone'
+    - 'us-central1-a'
+    - '--project'
+    - 'novaferi'
+
+  # Step 4: Update Kubernetes deployment with the new image
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: kubectl
+    args:
+    - 'set'
+    - 'image'
+    - 'deployment/node-app'
+    - 'nodeapp=us-central1-docker.pkg.dev/novaferi/${_ARTIFACT_REGISTRY_NAME}/nodeapp:${COMMIT_SHA}'
 
 timeout: '1200s'
+
+substitutions:
+  _ARTIFACT_REGISTRY_NAME: 'kb-node-v0'
