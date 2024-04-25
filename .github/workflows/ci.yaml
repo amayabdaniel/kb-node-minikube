@@ -62,7 +62,15 @@ jobs:
             gcloud components install kubectl
 
       - name: Create Namespace
-        run: kubectl create namespace kb-node-minikube-cluster
+        run: |
+            exists=$(kubectl get namespace kb-node-minikube-cluster --no-headers --output=custom-columns=:metadata.name 2>/dev/null || true)
+            if [[ -n "$exists" ]]; then
+              echo "Namespace kb-node-minikube-cluster already exists"
+              exit 0
+            else
+              echo "Namespace kb-node-minikube-cluster does not exist, proceeding with creation"
+              kubectl create namespace kb-node-minikube-cluster
+            fi
   
       - name: Deploy to Kubernetes
         run: |
