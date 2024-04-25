@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: redis-pvc
-  namespace: kb-node-minikube-cluster   # Replace YOUR_NAMESPACE with the desired namespace
+  namespace: kb-node-minikube-cluster
 spec:
   accessModes:
     - ReadWriteOnce
@@ -45,7 +45,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: node-app
-  namespace: kb-node-minikube-cluster   # Replace YOUR_NAMESPACE with the desired namespace
+  namespace: kb-node-minikube-cluster
 spec:
   type: ClusterIP
   selector:
@@ -59,7 +59,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis
-  namespace: kb-node-minikube-cluster   # Replace YOUR_NAMESPACE with the desired namespace
+  namespace: kb-node-minikube-cluster
 spec:
   replicas: 1
   selector:
@@ -96,7 +96,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis
-  namespace: kb-node-minikube-cluster   # Replace YOUR_NAMESPACE with the desired namespace
+  namespace: kb-node-minikube-cluster
 spec:
   type: ClusterIP
   selector:
