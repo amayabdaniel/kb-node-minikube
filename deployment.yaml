@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: node-app
-        image: us-central1-docker.pkg.dev/novaferi/artifact-registry-name/nodeapp:latest
+        image: us-central1-docker.pkg.dev/novaferi/kb-node-v0/nodeapp:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
