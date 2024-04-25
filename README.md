@@ -1,71 +1,102 @@
-# NodeJS Application Deployment with Kubernetes and GitHub Actions
+`# NodeJS Application Deployment with Kubernetes and GitHub Actions
 
 ## Overview
-This repository contains the necessary configuration files and steps to deploy a simple NodeJS application using Kubernetes and GitHub Actions. The application exposes an API for inserting and reading key-value pairs, using Redis as the key/value storage.
+This repository contains configuration files and instructions for deploying a NodeJS application with Kubernetes and automating deployment using GitHub Actions. The service offers a key-value store API interface using Redis.
 
 ## Table of Contents
-- Prerequisites
-- Folder Structure
-- Deployment Steps
-- CI/CD Pipeline with GitHub Actions
-- Troubleshooting
-- Contributing
-- License
+- [Prerequisites](#prerequisites)
+- [Folder Structure](#folder-structure)
+- [Deployment Steps](#deployment-steps)
+- [CI/CD Pipeline with GitHub Actions](#cicd-pipeline-with-github-actions)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Prerequisites
-Before starting, ensure you have the following:
-- Docker installed locally.
-- `kubectl` installed for interacting with the Kubernetes cluster.
-- Access to a Kubernetes cluster (e.g., Minikube, Google Kubernetes Engine).
-- A GitHub account for setting up GitHub Actions.
+Ensure the following tools are installed and accessible:
+- Docker
+- `kubectl`
+- Access to a Kubernetes cluster (like Minikube or GKE)
+- GitHub account for GitHub Actions
 
 ## Folder Structure
-Here is what the repository structure looks like:
-
-markdown
-Copy code
-- `Dockerfile`: Instructions to build the Docker image for the NodeJS application.
-- `app.js`: Main file of the NodeJS application.
-- `deployment.yaml`: Kubernetes manifest for deploying both the application and Redis.
-- `.github/workflows/ci.yaml`: GitHub Actions workflow file for CI/CD pipeline.
-- `package.json`: NodeJS package configuration.
+The repository is organized as follows:
+- `Dockerfile`: Contains the docker build instructions for the NodeJS application.
+- `app.js`: The main application file for the NodeJS service.
+- `k8s/base`: Contains base Kubernetes manifests.
+ - `kb-node-app`: Kubernetes manifests specific to the NodeJS application.
+ - `deployment.yaml`: Deployment configuration for the NodeJS application.
+ - `service.yaml`: Service definition for the NodeJS application.
+ - `redis`: Kubernetes manifests specific to the Redis deployment.
+ - `deployment.yaml`: Deployment configuration for Redis.
+ - `service.yaml`: Service definition for Redis.
+- `.github/workflows/ci.yaml`: Defines the GitHub Actions workflow for continuous integration and deployment.
+- `package.json`: Defines the NodeJS application's dependencies.
 
 ## Deployment Steps
-To deploy the NodeJS application and Redis using Kubernetes, follow these steps:
 
-1. **Build the Docker image:**
-    ```bash
-    docker build -t <image-name> .
-    ```
-2. **Push the Docker image:**
-    ```bash
-    docker push <image-name>
-    ```
-3. **Deploy to Kubernetes:**
-    ```bash
-    kubectl apply -f deployment.yaml
-    ```
+To get the application up and running on your Kubernetes cluster, follow these steps:
 
-## CI/CD Pipeline with GitHub Actions
-The CI/CD pipeline automates the building, pushing, and deployment processes using GitHub Actions:
-- **Automated Image Build and Push:** The Docker image is built and pushed to the specified container registry.
-- **Deployment:** The Kubernetes manifest is applied, updating the cluster with the latest image.
+### Clone the Repository
+To begin, clone this repository onto your local machine by running:
+```bash
+git clone https://github.com/<your-username>/<repository-name>.git
+cd <repository-name> `
 
-## Troubleshooting
-Here are a few tips if you encounter issues:
-- **Check Docker and Kubernetes Permissions:** Make sure your CI/CD pipeline has appropriate permissions to interact with Docker and Kubernetes.
-- **Logs and Output:** Check the output logs of the GitHub Actions workflow for specific error messages.
-- **Configuration Files:** Ensure all configurations in your Dockerfile and deployment.yaml are correct.
+### Build the Docker Image
 
-## Contributing
-Contributions are welcome! If you encounter issues or have improvements, feel free to open an issue or submit a pull request.
+Build the Docker image for the NodeJS application using the provided `Dockerfile`:
+
+
+`docker build -t <your-username>/<image-name>:<tag> .`
+
+Make sure to replace `<your-username>`, `<image-name>`, and `<tag>` with your Docker Hub username, the desired name for your image, and the tag respectively.
+
+### Push the Docker Image
+
+Push the built image to your Docker Hub repository (or any other container registry you are using):
+
+
+`docker push <your-username>/<image-name>:<tag>`
+
+### Set up Kubernetes Configuration
+
+Before deploying to Kubernetes, ensure your `kubectl` context is set to the correct cluster where you want to deploy the application:
+
+
+`kubectl config use-context <your-cluster-context>`
+
+### Deploy to Kubernetes
+
+Apply the Kubernetes manifests for both the application and Redis:
+
+
+`kubectl apply -f k8s/base/kb-node-app/deployment.yaml
+kubectl apply -f k8s/base/kb-node-app/service.yaml
+kubectl apply -f k8s/base/redis/deployment.yaml
+kubectl apply -f k8s/base/redis/service.yaml`
+
+### Verify the Deployment
+
+After applying the manifests, you can verify that the pods are up and running by executing:
+
+`kubectl get pods`
+
+You should see the pods for both the NodeJS application and Redis running without any errors.
+
+### Notes
+
+-   Ensure you update the image names in the `deployment.yaml` files to match the image you pushed to your registry.
+-   Modify any service types or resource requests/limits as per your environment needs.
+-   Ensure that the persistent volumes and claims for Redis are correctly set up if persistence is required.
+-   Always review and confirm the configuration files before applying them.
 
 ## License
 This project is open-sourced under the MIT License.
 
 
 
-# SRE Technical Test Answers
+
 
 ## Some questions:
 
