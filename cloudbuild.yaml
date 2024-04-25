@@ -1,5 +1,5 @@
 options:
-  logging: CLOUD_LOGGING_ONLY
+  logging: NONE
 
 steps:
   # Step 1: Build the Docker image and tag it appropriately
