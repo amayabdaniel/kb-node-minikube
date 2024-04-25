@@ -31,3 +31,4 @@ steps:
     - 'image'
     - 'deployment/node-app'
     - 'nodeapp=us-central1-docker.pkg.dev/novaferi/kb-node-v0/nodeapp:${COMMIT_SHA}'
+    - '--namespace=kb-node-minikube-cluster'
