@@ -142,6 +142,11 @@ This project is open-sourced under the MIT License.
 #### 4.1 How does your database’s lifecycle differ from your application’s? How could it be done differently inside Kubernetes?
     The lifecycle of the Redis database is more persistent compared to the stateless NodeJS application. In Kubernetes, this can be managed by using StatefulSets for Redis to handle its state persistence and Deployments for the stateless NodeJS application to manage its lifecycle.
 
+
+<img width="1262" alt="image" src="https://github.com/amayabdaniel/kb-node-minikube/assets/81663278/d4263a0b-c53f-44d6-ad2d-17a01582ab27">
+<img width="1235" alt="image" src="https://github.com/amayabdaniel/kb-node-minikube/assets/81663278/2cd5298d-64fc-4f14-9801-138b0e15960a">
+
+
 #### 4.2 Is your database persistent? If not, how could you accomplish it?
     Initially, the Redis deployment is not persistent. To achieve persistence, I would configure Redis with a PersistentVolumeClaim in Kubernetes to ensure data is not lost on pod restarts or failures.
 
