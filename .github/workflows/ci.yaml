@@ -42,3 +42,22 @@ jobs:
         run: |
           docker build . -t us-central1-docker.pkg.dev/novaferi/kb-node-v1/kb-nodeapp:${{ github.sha }}
           docker push us-central1-docker.pkg.dev/novaferi/kb-node-v1/kb-nodeapp:${{ github.sha }}
+
+
+      - name: Set up K8s config
+        run: |
+          echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 --decode > $HOME/.kube/config
+          export KUBECONFIG=$HOME/.kube/config
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f ./k8s/base/kb-node-app/deployment.yaml
+          kubectl apply -f ./k8s/base/kb-node-app/service.yaml
+          kubectl apply -f ./k8s/base/redis/deployment.yaml
+          kubectl apply -f ./k8s/base/redis/service.yaml
+          kubectl apply -f ./k8s/base/redis/pvc.yaml
+
+      - name: Update Deployment Image
+        run: |
+          kubectl set image deployment/kbnode-app kbnode-app=us-central1-docker.pkg.dev/novaferi/kb-node-v1/kbnodeapp:${{ github.sha }} --record
+          kubectl rollout status deployment/kbnode-app
