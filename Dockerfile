@@ -1,5 +1,5 @@
 # Use Node.js official Alpine image as it's smaller
-FROM node:14-alpine
+FROM node:21.7-alpine
 
 # Set non-root user and switch to it
 RUN adduser -D myuser
@@ -7,11 +7,16 @@ USER myuser
 
 # Set working directory
 WORKDIR /usr/src/app
-# Set the Node.js environment to production to avoid installing devDependencies
-ENV NODE_ENV=production
-# Install app dependencies by copying package files first
+
+# Temporarily set NODE_ENV to development to install all dependencies
+ENV NODE_ENV=development
+
+# Install app dependencies including devDependencies
 COPY --chown=myuser:myuser package.json yarn.lock ./
-RUN yarn install --production
+RUN yarn install
+
+# Set NODE_ENV back to production (if needed at runtime)
+ENV NODE_ENV=production
 
 # Copy the rest of the application code
 COPY --chown=myuser:myuser . .
