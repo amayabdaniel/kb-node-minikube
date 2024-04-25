@@ -19,11 +19,14 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: 'true'
+          registry-type: public
 
       - name: Build, tag, and push image to Amazon ECR
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: nodeapp
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: nodeapp
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
@@ -44,7 +47,7 @@ jobs:
 
       - name: Update kubeconfig
         run: |
-          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name kbv0
+          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name your-cluster-name
 
       - name: Deploy to Kubernetes
         run: |
