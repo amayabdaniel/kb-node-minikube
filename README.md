@@ -22,16 +22,6 @@ Before starting, ensure you have the following:
 ## Folder Structure
 Here is what the repository structure looks like:
 
-.
-├── .github
-│ └── workflows
-│ └── ci.yaml
-├── Dockerfile
-├── README.md
-├── app.js
-├── deployment.yaml
-└── package.json
-
 markdown
 Copy code
 - `Dockerfile`: Instructions to build the Docker image for the NodeJS application.
