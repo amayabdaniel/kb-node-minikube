@@ -21,6 +21,9 @@ jobs:
           GCP_SA_KEY_BASE64: ${{ secrets.GCP_SA_KEY_BASE64 }}
         run: |
           echo "$GCP_SA_KEY_BASE64" | base64 --decode > gcp-key.json
+          
+      - name: Authenticate with gcloud
+        run: |
           cat gcp-key.json
           gcloud auth activate-service-account --key-file=gcp-key.json
 
@@ -43,22 +46,18 @@ jobs:
           docker build . -t us-central1-docker.pkg.dev/novaferi/kb-node-v1/kb-nodeapp:${{ github.sha }}
           docker push us-central1-docker.pkg.dev/novaferi/kb-node-v1/kb-nodeapp:${{ github.sha }}
 
-      - name: Set up kubectl
-        run: |
+          - name: Set up kubectl
+          run: |
             gcloud components install kubectl
-
-      - name: Manually authenticate with gcloud
-        run: gcloud auth login
-
+  
       - name: Deploy to Kubernetes
         run: |
-          kubectl apply -f ./k8s/base/kb-node-app/deployment.yaml
-          kubectl apply -f ./k8s/base/kb-node-app/service.yaml
-          kubectl apply -f ./k8s/base/redis/deployment.yaml
-          kubectl apply -f ./k8s/base/redis/service.yaml
-          kubectl apply -f ./k8s/base/redis/pvc.yaml
-
+            kubectl apply -f ./k8s/base/kb-node-app/deployment.yaml
+            kubectl apply -f ./k8s/base/kb-node-app/service.yaml
+            kubectl apply -f ./k8s/base/redis/deployment.yaml
+            kubectl apply -f ./k8s/base/redis/service.yaml
+            kubectl apply -f ./k8s/base/redis/pvc.yaml
+  
       - name: Update Deployment Image
         run: |
-          kubectl set image deployment/kbnode-app kbnode-app=us-central1-docker.pkg.dev/novaferi/kb-node-v1/kbnodeapp:${{ github.sha }} --record
-          kubectl rollout status deployment/kbnode-app
+            kubectl set image deployment/kbnode-app kbnode-app=us-central1-docker.pkg.dev/novaferi/kb-node-v1/kbnodeapp:${{ github.sha }} --record
