@@ -151,3 +151,5 @@ This project is open-sourced under the MIT License.
 
 <img width="1262" alt="image" src="https://github.com/amayabdaniel/kb-node-minikube/assets/81663278/d4263a0b-c53f-44d6-ad2d-17a01582ab27">
 <img width="1235" alt="image" src="https://github.com/amayabdaniel/kb-node-minikube/assets/81663278/2cd5298d-64fc-4f14-9801-138b0e15960a">
+<img width="1037" alt="image" src="https://github.com/amayabdaniel/kb-node-minikube/assets/81663278/9c94c9e8-8114-451d-8953-2723645da960">
+
