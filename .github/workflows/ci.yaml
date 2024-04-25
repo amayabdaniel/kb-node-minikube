@@ -60,6 +60,9 @@ jobs:
       - name: Install gke-gcloud-auth-plugin for kubectl
         run: |
             gcloud components install kubectl
+
+      - name: Create Namespace
+        run: kubectl create namespace kb-node-minikube-cluster
   
       - name: Deploy to Kubernetes
         run: |

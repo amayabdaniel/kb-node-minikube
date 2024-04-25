@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis
-  namespace: kb-node-minikube-cluster
 spec:
   replicas: 1
   selector:
