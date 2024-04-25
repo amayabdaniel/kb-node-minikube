@@ -39,6 +39,10 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "500m"
+      imagePullSecrets:
+      - name: gcr-json-key
+
+        
 
 ---
 apiVersion: v1
