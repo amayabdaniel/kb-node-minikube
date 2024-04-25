@@ -1,4 +1,4 @@
-name: Deploy to GKE
+name: Build and Push Image
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - v0
 
 jobs:
-  deploy:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,9 +30,4 @@ jobs:
 
       - name: Authenticate to GCR
         run: gcloud auth configure-docker
-
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl set image deployment/node-app nodeapp=us-central1-docker.pkg.dev/novaferi/kb-node-v0/nodeapp:${{ github.sha }} --record
-          kubectl rollout status deployment/node-app
 

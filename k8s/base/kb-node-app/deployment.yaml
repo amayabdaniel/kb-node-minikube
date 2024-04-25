@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kbnode-app
+  namespace: kb-node-minikube-cluster
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kbnode-app
+  template:
+    metadata:
+      labels:
+        app: kbnode-app
+    spec:
+      containers:
+      - name: kbnode-app
+        image: us-central1-docker.pkg.dev/novaferi/kb-node-v0/kbnodeapp:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+      imagePullSecrets:
+      - name: gcr-json-key
