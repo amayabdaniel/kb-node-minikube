@@ -22,6 +22,10 @@ jobs:
         run: |
           echo "$GCP_SA_KEY" > gcp-key.json
           gcloud auth activate-service-account --key-file=gcp-key.json
+          
+      - name: Check gcloud info
+        run: |
+          gcloud config list    
 
       - name: Set up GCloud
         uses: google-github-actions/setup-gcloud@v0.2.0
