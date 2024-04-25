@@ -26,7 +26,8 @@ spec:
     spec:
       containers:
       - name: node-app
-        image: node-app-image:latest
+        image: us-central1-docker.pkg.dev/novaferi/artifact-registry-name/nodeapp:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 3000
         resources:
@@ -68,6 +69,7 @@ spec:
       containers:
       - name: redis
         image: redis:alpine
+        imagePullPolicy: Always
         ports:
         - containerPort: 6379
         volumeMounts:
@@ -97,16 +99,3 @@ spec:
   ports:
     - port: 6379
       targetPort: 6379
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: node-app
-spec:
-  type: ClusterIP
-  selector:
-    app: node-app
-  ports:
-    - port: 3000
-      targetPort: 3000

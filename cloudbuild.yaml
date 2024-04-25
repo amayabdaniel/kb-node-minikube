@@ -1,0 +1,22 @@
+steps:
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+  - 'container'
+  - 'clusters'
+  - 'get-credentials'
+  - 'kb-node-minikube-cluster'
+  - '--zone'
+  - 'us-central1-a'
+  - '--project'
+  - 'novaferi'
+
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: kubectl
+  args:
+  - 'set'
+  - 'image'
+  - 'deployment/node-app'
+  - 'nodeapp=us-central1-docker.pkg.dev/novaferi/${{ secrets.GCP_ARTIFACT_REGISTRY_NAME }}/nodeapp:${COMMIT_SHA}'
+
+timeout: '1200s'
