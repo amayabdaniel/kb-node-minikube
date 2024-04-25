@@ -21,7 +21,12 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
+        id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Display ECR Registry Output
+        run: |
+          echo "Registry URI: ${{ steps.login-ecr.outputs.registry }}"
 
       - name: Build, tag, and push image to Amazon ECR
         env:
@@ -29,6 +34,7 @@ jobs:
           ECR_REPOSITORY: nodeapp
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          echo "Docker Build Command: docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ."
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
@@ -46,3 +52,4 @@ jobs:
         run: |
           kubectl set image deployment/node-app nodeapp=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --record
           kubectl rollout status deployment/node-app
+
