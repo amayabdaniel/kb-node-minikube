@@ -1,30 +1,33 @@
-# Use Node.js official Alpine image as it's smaller
-FROM node:21.7-alpine
-
-# Create app directory and ensure correct permissions
+# Build stage
+FROM node:21.7-alpine as builder
 WORKDIR /usr/src/app
-RUN adduser -D myuser && chown -R myuser:myuser /usr/src/app
 
-# Switch to non-root user
-USER myuser
-
-# Temporarily set NODE_ENV to development to install all dependencies
-ENV NODE_ENV=development
-
-# Install app dependencies including devDependencies
-COPY --chown=myuser:myuser package.json yarn.lock ./
-RUN yarn install
-
-# Set NODE_ENV back to production (if needed at runtime)
-ENV NODE_ENV=production
+# Ensure that dependencies are installed
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
 # Copy the rest of the application code
-COPY --chown=myuser:myuser . .
+COPY . .
 
-# Build the TypeScript application
+# Build the application
 RUN yarn build
 
-# Expose port 3000
+# Production stage
+FROM node:21.7-alpine
+WORKDIR /app
+
+# Create a user and assign folder ownership
+RUN adduser -D myuser && chown -R myuser:myuser /app
+USER myuser
+
+# Copy built assets from the builder stage
+COPY --from=builder --chown=myuser:myuser /usr/src/app/dist ./dist
+COPY --from=builder --chown=myuser:myuser /usr/src/app/node_modules ./node_modules
+
+# Set NODE_ENV to production
+ENV NODE_ENV=production
+
+# Expose port 3000 for the application
 EXPOSE 3000
 
 # Command to run the application
