@@ -1,4 +1,4 @@
-`# NodeJS Application Deployment with Kubernetes and GitHub Actions
+# NodeJS Application Deployment with Kubernetes and GitHub Actions
 
 ## Overview
 This repository contains configuration files and instructions for deploying a NodeJS application with Kubernetes and automating deployment using GitHub Actions. The service offers a key-value store API interface using Redis.
