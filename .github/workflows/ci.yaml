@@ -80,21 +80,7 @@ jobs:
             kubectl apply -f ./k8s/base/redis/service.yaml
             kubectl apply -f ./k8s/base/redis/pvc.yaml
   
-      - name: Update Deployment Image and Check Rollout
+      - name: Update Deployment Image
         run: |
-          kubectl set image deployment/kbnode-app kbnode-app=us-central1-docker.pkg.dev/novaferi/kb-node-v1/kbnodeapp:${{ github.sha }} --record
-          timeout=60 # Timeout in seconds
-          end=$((SECONDS+timeout))
-          while true; do
-            if kubectl rollout status deployment/kbnode-app --timeout=10s; then
-              echo "Deployment successful."
-              break
-            fi
-            if [[ "${SECONDS}" -ge "${end}" ]]; then
-              echo "Deployment failed to stabilize within ${timeout} seconds."
-              kubectl rollout undo deployment kbnode-app
-              echo "Rolled back deployment."
-              exit 1
-            fi
-            sleep 5
-          done
+          kubectl set image deployment/kbnode-app kbnode-app=us-central1-docker.pkg.dev/novaferi/kb-node-v1/kbnodeapp:${{ github.sha }}
+          kubectl rollout status deployment/kbnode-app
