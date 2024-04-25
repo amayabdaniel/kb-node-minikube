@@ -1,0 +1,40 @@
+name: Deploy to GKE
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build Docker image
+        run: |
+          docker build . -t us-central1-docker.pkg.dev/novaferi/kb-node-v0/nodeapp:${{ github.sha }}
+          docker push us-central1-docker.pkg.dev/novaferi/kb-node-v0/nodeapp:${{ github.sha }}
+
+      - name: Set up GCloud
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Authenticate to GCR
+        run: gcloud auth configure-docker
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl set image deployment/node-app nodeapp=us-central1-docker.pkg.dev/novaferi/kb-node-v0/nodeapp:${{ github.sha }} --record
+          kubectl rollout status deployment/node-app
+
+      - name: Create K8s secret
+        run: kubectl create secret generic db-secret --from-literal=username=dbuser --from-literal=password=${{ secrets.DB_PASSWORD }}
