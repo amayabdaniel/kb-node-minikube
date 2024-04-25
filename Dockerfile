@@ -1,12 +1,12 @@
 # Use Node.js official Alpine image as it's smaller
 FROM node:21.7-alpine
 
-# Set non-root user and switch to it
-RUN adduser -D myuser
-USER myuser
-
-# Set working directory
+# Create app directory and ensure correct permissions
 WORKDIR /usr/src/app
+RUN adduser -D myuser && chown -R myuser:myuser /usr/src/app
+
+# Switch to non-root user
+USER myuser
 
 # Temporarily set NODE_ENV to development to install all dependencies
 ENV NODE_ENV=development
