@@ -40,32 +40,30 @@ To get the application up and running on your Kubernetes cluster, follow these s
 ### Clone the Repository
 To begin, clone this repository onto your local machine by running:
 ```bash
-git clone https://github.com/<your-username>/<repository-name>.git
-cd <repository-name> 
+git clone https://github.com/amayabdaniel/kb-node-minikube.git
+cd kb-node-minikube 
 ```
 ### Build the Docker Image
 
 Build the Docker image for the NodeJS application using the provided `Dockerfile`:
 
 ```bash
-docker build -t <your-username>/<image-name>:<tag> .
+docker build -t us-central1-docker.pkg.dev/novaferi/kb-node-v1/kb-nodeapp:e87065fca587b7f92bdc62c7f8539722a4585c7a .
 ```
-
-Make sure to replace `<your-username>`, `<image-name>`, and `<tag>` with your Docker Hub username, the desired name for your image, and the tag respectively.
 
 ### Push the Docker Image
 
 Push the built image to your Docker Hub repository (or any other container registry you are using):
 
 ```bash
-docker push <your-username>/<image-name>:<tag>
+docker push us-central1-docker.pkg.dev/novaferi/kb-node-v1/kb-nodeapp:e87065fca587b7f92bdc62c7f8539722a4585c7a
 ```
 ### Set up Kubernetes Configuration
 
 Before deploying to Kubernetes, ensure your `kubectl` context is set to the correct cluster where you want to deploy the application:
 
 ```bash
-kubectl config use-context <your-cluster-context>
+kubectl config use-context gke_novaferi_us-central1_kb-node-minikube-cluster
 ```
 ### Deploy to Kubernetes
 
