@@ -18,8 +18,8 @@ steps:
     - 'clusters'
     - 'get-credentials'
     - 'kb-node-minikube-cluster'
-    - '--zone'
-    - 'us-central1-a'
+    - '--region'
+    - 'us-central1'
     - '--project'
     - 'novaferi'
 
